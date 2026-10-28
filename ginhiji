@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hijikata's Phone - Ginhiji High School AU</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            background-color: #0f111a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 스마트폰 외형 프레임 */
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 45px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7), inset 0 0 10px rgba(255,255,255,0.2);
+            overflow: hidden;
+            position: relative;
+            border: 10px solid #222;
+        }
+
+        /* 화면 공통 */
+        .screen {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 50px 24px 30px 24px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* 1. 잠금 화면 */
+        #lock-screen {
+            background: linear-gradient(135deg, #1c2833 0%, #2c3e50 100%);
+            color: white;
+            align-items: center;
+            z-index: 10;
+        }
+        .lock-header {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .lock-date {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        .lock-time {
+            font-size: 64px;
+            font-weight: 300;
+            letter-spacing: -2px;
+        }
+        
+        /* 알림 배너 (긴토키) */
+        .notification {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 100%;
+            padding: 16px;
+            border-radius: 20px;
+            margin-bottom: auto;
+            margin-top: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .notif-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            opacity: 0.7;
+            margin-bottom: 6px;
+        }
+        .notif-body b {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 3px;
+            color: #ff7675;
+        }
+        .notif-body p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .unlock-hint {
+            font-size: 14px;
+            opacity: 0.6;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        /* 2. 홈 화면 */
+        #home-screen {
+            background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
+            color: white;
+            display: none;
+            z-index: 5;
+            justify-content: flex-start;
+        }
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px 16px;
+        }
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            font-size: 12px;
+            gap: 6px;
+        }
+        .app-icon .icon-box {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        .app-icon:hover .icon-box {
+            transform: scale(1.05);
+        }
+
+        /* 3. 앱 내부 공통 화면 */
+        .app-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #121212;
+            color: white;
+            z-index: 20;
+            display: none;
+            flex-direction: column;
+            padding: 50px 20px 30px 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .app-view.active {
+            transform: translateY(0);
+        }
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #2a2a2a;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: #3498db;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* 메시지 목록 스타일 */
+        .chat-list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #1f1f1f;
+            cursor: pointer;
+            gap: 15px;
+        }
+        .chat-avatar {
+            width: 45px;
+            height: 45px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+        .chat-info h4 {
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+        .chat-info p {
+            font-size: 13px;
+            color: #888;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 210px;
+        }
+
+        /* 개별 채팅방 스타일 */
+        .chat-room {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #121212;
+            padding: 50px 20px 30px 20px;
+            z-index: 25;
+        }
+        .chat-room.active {
+            display: flex;
+        }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .chat-bubble {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .chat-bubble.other {
+            background: #262628;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+        .chat-bubble.me {
+            background: #007aff;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        /* 메모 앱 스타일 */
+        .memo-content {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ddd;
+            flex-grow: 1;
+        }
+
+        /* 인스타그램 스타일 */
+        .insta-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .insta-avatar {
+            width: 70px;
+            height: 70px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            border: 2px solid #e1306c;
+        }
+        .insta-stats {
+            display: flex;
+            gap: 15px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .insta-stats b {
+            display: block;
+            font-size: 15px;
+        }
+        .insta-dm-btn {
+            background: #262626;
+            border: 1px solid #444;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+        .insta-dm-btn:hover {
+            background: #363636;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-frame">
+        <!-- 1. 잠금 화면 -->
+        <div id="lock-screen" class="screen">
+            <div class="lock-header">
+                <div class="lock-date">10월 05일 월요일</div>
+                <div class="lock-time">10:05</div>
+            </div>
+
+            <!-- 인스타그램 긴토키 알림 -->
+            <div class="notification" onclick="openApp('chat-app'); openChat('gintoki')">
+                <div class="notif-top"><span>인스타그램</span><span>방금 전</span></div>
+                <div class="notif-body">
+                    <b>긴토키</b>
+                    <p>야 히지카타 이번 주 일요일에 새로 생긴 파르페 가게 갈래?</p>
+                </div>
+            </div>
+
+            <div class="unlock-hint" onclick="unlockPhone()">화면을 터치하여 잠금 해제 ↑</div>
+        </div>
+
+        <!-- 2. 홈 화면 -->
+        <div id="home-screen" class="screen">
+            <div class="status-bar">
+                <span>05:10</span>
+                <span>📶 🔋 82%</span>
+            </div>
+
+            <div class="app-grid">
+                <div class="app-icon" onclick="openApp('chat-app')">
+                    <div class="icon-box">💬</div>
+                    <span>메시지</span>
+                </div>
+                <div class="app-icon" onclick="openApp('memo-app')">
+                    <div class="icon-box">📝</div>
+                    <span>메모</span>
+                </div>
+                <div class="app-icon" onclick="openApp('insta-app')">
+                    <div class="icon-box">📸</div>
+                    <span>Instagram</span>
+                </div>
+                <div class="app-icon" onclick="openApp('calendar-app')">
+                    <div class="icon-box">📅</div>
+                    <span>캘린더</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 앱 1: 메시지 목록 -->
+        <div id="chat-app" class="app-view">
+            <div class="app-header">
+                <button class="back-btn" onclick="closeApp('chat-app')">&lt; 홈</button>
+                <span>메시지</span>
+                <span style="width:30px"></span>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+                <div class="chat-list-item" onclick="openChat('gintoki')">
+                    <div class="chat-avatar"> 자연</div>
+                    <div class="chat-info">
+                        <h4>긴토키</h4>
+                        <p>그니까 빨리 오라는 거지 보고싶기도 하고 ㅋㅋ</p>
+                    </div>
+                </div>
+                <div class="chat-list-item" onclick="openChat('sougo')">
+                    <div class="chat-avatar">🗡️</div>
+                    <div class="chat-info">
+                        <h4>오키타 소고</h4>
+                        <p>히지카타 씨 바세린 통에 마요네즈 넣어놨습니다</p>
+                    </div>
+                </div>
+                <div class="chat-list-item" onclick="openChat('kondo')">
+                    <div class="chat-avatar">🦍</div>
+                    <div class="chat-info">
+                        <h4>콘도 이사오</h4>
+                        <p>토시~~ 오늘 매점에 마요네즈 쟁여놨어!!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 긴토키 채팅방 (문자) -->
+        <div id="chat-gintoki" class="chat-room">
+            <div class="app-header">
+                <button class="back-btn" onclick="closeChat('gintoki')">&lt; 목록</button>
+                <span>긴토키</span>
+                <span style="width:30px"></span>
+            </div>
+            <div class="chat-container">
+                <div class="chat-bubble other">야야 너 오늘 체육복 빌린다고 하지 않았냐?</div>
+                <div class="chat-bubble other">언제 옴</div>
+                <div class="chat-bubble me">잠만 기다려 봐 선도부실 들르고 바로 갈 거니까</div>
+                <div class="chat-bubble other">ㅇㅇ 종 치기 전에 안 오면 안 빌려 줄 거야 알아서 하셈</div>
+                <div class="chat-bubble me">... 나 그럼 뭐 입으라고; </div>
+                <div class="chat-bubble other"> 그니까 빨리 오라는 거지 보고싶기도 하고 ㅋㅋ</div>
+            </div>
+        </div>
+
+        <!-- 오키타 소고 채팅방 -->
+        <div id="chat-sougo" class="chat-room">
+            <div class="app-header">
+                <button class="back-btn" onclick="closeChat('sougo')">&lt; 목록</button>
+                <span>오키타 소고</span>
+                <span style="width:30px"></span>
+            </div>
+            <div class="chat-container">
+                <div class="chat-bubble other">부장님, 바세린 통에 마요네즈 넣어놨으니까 오늘 공부하다 입술 트면 바르세요.</div>
+                <div class="chat-bubble me">미쳤냐 소고?! 그걸 왜 입술에 발라! 당장 치워!</div>
+                <div class="chat-bubble other">바르면 촉촉하고 고소하고 일석이조 아닙니까.</div>
+                <div class="chat-bubble me">죽여버린다 소고 오늘 선도부 청소 두 배다.</div>
+            </div>
+        </div>
+
+        <!-- 콘도 이사오 채팅방 -->
+        <div id="chat-kondo" class="chat-room">
+            <div class="app-header">
+                <button class="back-btn" onclick="closeChat('kondo')">&lt; 목록</button>
+                <span>콘도 이사오</span>
+                <span style="width:30px"></span>
+            </div>
+            <div class="chat-container">
+                <div class="chat-bubble other">토시~~ 오늘 매점에 마요네즈 대량 입고됐대!! 내가 세 개 쟁여놨어!!</div>
+                <div class="chat-bubble me">오... 그렇게까지 해 줄 필요까지야... 기분은 좋지만.</div>
+                <div class="chat-bubble other">하하하, 토시가 기뻐하니 나도 좋네! 아, 근데 오키타가 토시 필통에 마요네즈 짜넣는 거 방금 막았다 ㅎㅎ</div>
+                <div class="chat-bubble me">그 소고 녀석이 진짜... </div>
+            </div>
+        </div>
+
+        <!-- 앱 2: 메모 -->
+        <div id="memo-app" class="app-view">
+            <div class="app-header">
+                <button class="back-btn" onclick="closeApp('memo-app')">&lt; 홈</button>
+                <span>메모</span>
+                <span style="width:30px"></span>
+            </div>
+            <div class="memo-content">
+                <b>[필수 준수 사항]</b><br><br>
+                1. 매점 마요네즈 품절 주의하기.<br>
+                2. 매주 월수금 방과 후에 수학학원. (끝나면 긴토키 스타벅스 앞에 있음.)<br>
+                3. 선도부 풍기 단속 철저히 (특히 3학년 곱슬머리 단속).
+            </div>
+        </div>
+
+        <!-- 앱 3: 인스타그램 (Hijikatatoshiro_05) -->
+        <div id="insta-app" class="app-view">
+            <div class="app-header">
+                <button class="back-btn" onclick="closeApp('insta-app')">&lt; 홈</button>
+                <span>Hijikatatoshiro_05</span>
+                <span style="width:30px"></span>
+            </div>
+            <div class="insta-profile">
+                <div class="insta-avatar">⚔️</div>
+                <div class="insta-stats">
+                    <div><b>0</b>게시물</div>
+                    <div><b>151</b>팔로워</div>
+                    <div><b>21</b>팔로잉</div>
+                </div>
+            </div>
+            <div style="font-size: 13px; line-height: 1.4; margin-bottom: 15px;">
+                <b>히지카타 토시로</b><br>
+                은혼고 3학년.<br>
+              
+            </div>
+            <!-- 인스타 DM 버튼 추가 -->
+            <div class="insta-dm-btn" onclick="openInstaDm()">
+                💬 긴토키와의 DM 확인하기
+            </div>
+            <div style="text-align: center; color: #666; margin-top: 30px; font-size: 14px;">
+                게시물 없음
+            </div>
+        </div>
+
+        <!-- 인스타그램 DM 방 (긴토키와의 데이트 일정 조율) -->
+        <div id="insta-dm-room" class="chat-room">
+            <div class="app-header">
+                <button class="back-btn" onclick="closeInstaDm()">&lt; 프로필</button>
+                <span>긴토키 (gintoki_sada)</span>
+                <span style="width:30px"></span>
+            </div>
+            <div class="chat-container">
+                <div class="chat-bubble other">야 히지카타 이번 주 일요일에 새로 생긴 파르페 가게 갈래? </div>
+                <div class="chat-bubble other">거기 메뉴 중에 진한 마요네즈 얹은 극악무도한 디저트도 있다던데... 이거 데이트 신청이니까</div>
+                <div class="chat-bubble me">... 애초에 누가 데이트래?! 그냔 가자거 하든가</div>
+                <div class="chat-bubble other">얼굴 또 빨개져서 타이핑 치는 거 다 보여 히지카타 군~ 싫으면 말구</div>
+                <div class="chat-bubble me">누가 싫다 그랬냐 시간은 몇 시인데</div>
+                <div class="chat-bubble other">일요일 낮 2시 지각하면 오늘 파르페 값은 토시로 전속 지갑에서 나가는 거다? </div>
+                <div class="chat-bubble me">알았어 안 늦어... 갈테니까 부끄럽게나 하지 마라</div>
+            </div>
+        </div>
+
+        <!-- 앱 4: 캘린더 -->
+        <div id="calendar-app" class="app-view">
+            <div class="app-header">
+                <button class="back-btn" onclick="closeApp('calendar-app')">&lt; 홈</button>
+                <span>캘린더</span>
+                <span style="width:30px"></span>
+            </div>
+            <div style="background: #1e1e1e; padding: 15px; border-radius: 10px; font-size: 14px;">
+                <b style="color: #3498db;">10월 28일 (수요일)</b><br><br>
+                📌 오후 11:55 - 발표 대본 작성, ppt 수행자료 준비<br>
+                📌 화목 방과 후 스카 <br><br>
+                <b style="color: #e1306c;">[이번 주 일요일 일정]</b><br>
+                📌 오후 2:00 - 긴토키와 신상 파르페 가게 데이트 (곧 100일 이니까 같이 서로 선물 사주기)
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function unlockPhone() {
+            document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
+            document.getElementById('lock-screen').style.opacity = '0';
+            document.getElementById('home-screen').style.display = 'flex';
+        }
+
+        function openApp(appId) {
+            document.getElementById(appId).classList.add('active');
+        }
+
+        function closeApp(appId) {
+            document.getElementById(appId).classList.remove('active');
+        }
+
+        function openChat(chatId) {
+            document.getElementById('chat-' + chatId).classList.add('active');
+        }
+
+        function closeChat(chatId) {
+            document.getElementById('chat-' + chatId).classList.remove('active');
+        }
+
+        function openInstaDm() {
+            document.getElementById('insta-dm-room').classList.add('active');
+        }
+
+        function closeInstaDm() {
+            document.getElementById('insta-dm-room').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
