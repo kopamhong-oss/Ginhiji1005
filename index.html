@@ -21,13 +21,13 @@
             overflow: hidden;
         }
 
-        /* 스마트폰 외형 프레임 */
+        /* 아이폰 실물 외형 프레임 */
         .phone-frame {
             width: 375px;
             height: 812px;
             background: #000;
             border-radius: 50px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8), inset 0 0 12px rgba(255,255,255,0.25);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.85), inset 0 0 14px rgba(255,255,255,0.3);
             overflow: hidden;
             position: relative;
             border: 12px solid #1c1c1e;
@@ -57,7 +57,7 @@
             box-shadow: inset 0 0 2px rgba(255,255,255,0.2);
         }
 
-        /* 화면 공통 */
+        /* 화면 공통 컨테이너 */
         .screen {
             width: 100%;
             height: 100%;
@@ -71,7 +71,7 @@
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* 상단 상태바 (실제 아이폰 스타일) */
+        /* 상단 상태바 */
         .status-bar {
             display: flex;
             justify-content: space-between;
@@ -101,7 +101,7 @@
             transform: translateX(-50%);
             width: 134px;
             height: 5px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             border-radius: 3px;
             z-index: 4000;
             pointer-events: none;
@@ -183,7 +183,7 @@
             60% {transform: translateY(-3px);}
         }
 
-        /* 비밀번호 입력 화면 (실제 아이폰 레퍼런스 스타일 완벽 구현) */
+        /* 비밀번호 입력 화면 (레퍼런스 이미지 100% 반영) */
         #passcode-screen {
             position: absolute;
             top: 0;
@@ -194,7 +194,7 @@
             background-size: cover;
             color: white;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: space-between;
             padding: 55px 20px 35px 20px;
             z-index: 15;
             display: none;
@@ -207,32 +207,34 @@
         }
         .passcode-header {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
         .passcode-lock-icon {
-            font-size: 22px;
-            margin-bottom: 12px;
+            font-size: 24px;
+            margin-bottom: 8px;
         }
         .passcode-header h2 {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 400;
-            margin-bottom: 25px;
+            margin-bottom: 18px;
             color: white;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
         }
+        /* 6자리 암호 도트 인디케이터 */
         .passcode-dots {
             display: flex;
-            gap: 16px;
+            gap: 14px;
             justify-content: center;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
         .passcode-dots .dot {
-            width: 13px;
-            height: 13px;
-            border: 2px solid rgba(255, 255, 255, 0.8);
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.85);
             border-radius: 50%;
             background: transparent;
             transition: background 0.2s, border-color 0.2s;
@@ -247,22 +249,23 @@
             opacity: 0;
             height: 16px;
             transition: opacity 0.2s;
-            margin-top: 5px;
+            margin-top: 2px;
         }
         .passcode-error.visible {
             opacity: 1;
         }
+
+        /* 아이폰 순정형 숫자 패드 (글자 위치 및 레이아웃 완벽 일치) */
         .number-pad {
             display: grid;
-            grid-template-columns: repeat(3, 75px);
-            gap: 14px;
+            grid-template-columns: repeat(3, 72px);
+            gap: 12px;
             justify-content: center;
-            margin-top: auto;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         .num-btn {
-            width: 75px;
-            height: 75px;
+            width: 72px;
+            height: 72px;
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
@@ -279,27 +282,29 @@
             background: rgba(255, 255, 255, 0.45);
         }
         .num-main {
-            font-size: 30px;
+            font-size: 28px;
             font-weight: 300;
             color: white;
             line-height: 1;
         }
         .num-sub {
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 600;
             letter-spacing: 1.5px;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.75);
             margin-top: 2px;
         }
+
+        /* 하단 '긴급상황' / '취소' 버튼 */
         .passcode-bottom-actions {
             width: 100%;
             display: flex;
             justify-content: space-between;
             padding: 0 25px;
-            margin-top: 10px;
             font-size: 14px;
             color: white;
             font-weight: 400;
+            margin-bottom: 10px;
         }
         .passcode-bottom-actions span {
             cursor: pointer;
@@ -362,7 +367,6 @@
         }
 
         .icon-phone { background: linear-gradient(135deg, #34c759, #28a745); }
-        .icon-facetime { background: linear-gradient(135deg, #34c759, #28a745); }
         .icon-calendar { background: #ffffff; color: #000; flex-direction: column; justify-content: flex-start; }
         .icon-photos { background: linear-gradient(135deg, #fff, #eee); }
         .icon-camera { background: linear-gradient(135deg, #636366, #1c1c1e); }
@@ -382,7 +386,6 @@
         .cal-header { background: #ff3b30; width: 100%; height: 16px; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
         .cal-body { font-size: 24px; font-weight: bold; color: #333; display: flex; align-items: center; justify-content: center; height: 44px; }
 
-        /* 페이지 인디케이터 점 */
         .page-dots {
             display: flex;
             justify-content: center;
@@ -422,7 +425,7 @@
             border-radius: 13px;
         }
 
-        /* 3. 앱 실행 스플래시 & 블러 */
+        /* 앱 실행 스플래시 & 블러 */
         #splash-screen {
             position: absolute;
             top: 0;
@@ -461,7 +464,7 @@
             opacity: 1;
         }
 
-        /* 전화 수신 팝업 (10초 후 등장) */
+        /* 전화 수신 팝업 */
         #incoming-call-popup {
             position: absolute;
             top: -120px;
@@ -574,7 +577,7 @@
             box-shadow: 0 4px 15px rgba(255, 59, 48, 0.4);
         }
 
-        /* 4. 앱 내부 화면 공통 */
+        /* 앱 내부 화면 공통 */
         .app-view {
             position: absolute;
             top: 0;
@@ -612,7 +615,6 @@
             cursor: pointer;
         }
 
-        /* 메시지 목록 아이템 스타일 */
         .chat-list-item {
             display: flex;
             align-items: center;
@@ -649,7 +651,6 @@
             max-width: 210px;
         }
 
-        /* 메시지 개별 채팅방 스타일 */
         .chat-room {
             position: absolute;
             top: 0;
@@ -695,7 +696,6 @@
             border-bottom-right-radius: 2px;
         }
 
-        /* 전화 앱 스타일 */
         #phone-app {
             background: #000;
             color: #fff;
@@ -729,7 +729,6 @@
             color: #888;
         }
 
-        /* 인스타그램 프로필 화면 */
         #insta-app {
             background: #000;
             color: #fff;
@@ -849,7 +848,6 @@
             font-size: 20px;
         }
 
-        /* 인스타그램 DM 리스트 화면 */
         #insta-dm-list {
             position: absolute;
             top: 0;
@@ -926,7 +924,6 @@
             color: #888;
         }
 
-        /* 인스타그램 개별 채팅방 */
         .insta-dm-room {
             position: absolute;
             top: 0;
@@ -954,7 +951,6 @@
             font-weight: bold;
         }
 
-        /* 사파리 브라우저 앱 */
         #safari-app {
             background: #ffffff;
             color: #000;
@@ -1032,7 +1028,7 @@
 <body>
 
     <div class="phone-frame">
-        <!-- 다이내믹 아일랜드 (상단 노치 카메라 영역) -->
+        <!-- 다이내믹 아일랜드 -->
         <div class="dynamic-island">
             <div class="island-cam"></div>
             <div style="width: 10px; height: 10px; background: #050505; border-radius: 50%;"></div>
@@ -1104,7 +1100,7 @@
             <div class="home-indicator dark"></div>
         </div>
 
-        <!-- 비밀번호 입력 화면 (실제 아이폰 레퍼런스 스타일) -->
+        <!-- 비밀번호 입력 화면 (사진 레퍼런스와 100% 동일한 레이아웃 및 6자리 암호 입력) -->
         <div id="passcode-screen">
             <div class="status-bar dark" style="width: 100%; position: absolute; top: 12px; left: 0; padding: 0 20px;">
                 <span>10:05</span>
@@ -1116,7 +1112,10 @@
             <div class="passcode-header" id="passcodeHeader">
                 <div class="passcode-lock-icon">🔒</div>
                 <h2>암호 입력</h2>
+                <!-- 6개의 입력 도트 -->
                 <div class="passcode-dots">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
@@ -1125,6 +1124,7 @@
                 <div id="passcode-error" class="passcode-error">암호가 올바르지 않습니다 다시 시도하세요</div>
             </div>
 
+            <!-- 사진과 똑같은 순정형 숫자 패드 (1~9, 중앙 0, 우측 지우기 ⌫) -->
             <div class="number-pad">
                 <div class="num-btn" onclick="pressNum(1)"><span class="num-main">1</span><span class="num-sub"></span></div>
                 <div class="num-btn" onclick="pressNum(2)"><span class="num-main">2</span><span class="num-sub">ABC</span></div>
@@ -1137,9 +1137,10 @@
                 <div class="num-btn" onclick="pressNum(9)"><span class="num-main">9</span><span class="num-sub">WXYZ</span></div>
                 <div></div>
                 <div class="num-btn" onclick="pressNum(0)"><span class="num-main">0</span><span class="num-sub"></span></div>
-                <div class="num-btn" onclick="pressClear()" style="font-size: 20px;"><span class="num-main">⌫</span></div>
+                <div class="num-btn" onclick="pressClear()"><span class="num-main">⌫</span><span class="num-sub"></span></div>
             </div>
 
+            <!-- 하단 '긴급상황' / '취소' 텍스트 버튼 -->
             <div class="passcode-bottom-actions">
                 <span>긴급상황</span>
                 <span>취소</span>
@@ -1214,7 +1215,6 @@
                 </div>
             </div>
 
-            <!-- 페이지 인디케이터 점 -->
             <div class="page-dots">
                 <div class="page-dot active"></div>
                 <div class="page-dot"></div>
@@ -1611,7 +1611,7 @@
 
     <script>
         let currentPin = "";
-        const correctPin = "1005";
+        const correctPin = "100500"; // 6자리 비밀번호
         let callTimeout = null;
         let callTimerInterval = null;
 
@@ -1637,11 +1637,9 @@
             const callScreen = document.getElementById('active-call-screen');
             callScreen.classList.add('active');
 
-            // 지정된 유튜브 링크 1분 2초(62초) ~ 1분 32초(92초) 재생 시작
             const audioContainer = document.getElementById('audio-container');
             audioContainer.innerHTML = `<iframe width="0" height="0" src="https://www.youtube.com/embed/8Pvv9vPJzwE?start=62&end=92&autoplay=1" frameborder="0" allow="autoplay"></iframe>`;
 
-            // 통화 시간 타이머 표시
             let seconds = 0;
             const timerText = document.getElementById('call-timer-text');
             callTimerInterval = setInterval(() => {
@@ -1651,13 +1649,12 @@
                 timerText.innerText = `통화 중... 0${m}:${s < 10 ? '0' : ''}${s}`;
             }, 1000);
 
-            // 재생 시간(30초) + 2초 침묵 = 총 32초(32000ms) 뒤에 자동 종료
             callTimeout = setTimeout(() => {
                 endCall();
             }, 32000);
         }
 
-        /* 통화 종료 버튼 또는 자동 종료 시 */
+        /* 통화 종료 버튼 */
         function endCall() {
             if(callTimeout) clearTimeout(callTimeout);
             if(callTimerInterval) clearInterval(callTimerInterval);
@@ -1679,10 +1676,10 @@
         }
 
         function pressNum(num) {
-            if (currentPin.length < 4) {
+            if (currentPin.length < 6) {
                 currentPin += num;
                 updateDots();
-                if (currentPin.length === 4) {
+                if (currentPin.length === 6) {
                     checkPin();
                 }
             }
@@ -1698,7 +1695,7 @@
 
         function updateDots() {
             const dots = document.querySelectorAll('.passcode-dots .dot');
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 6; i++) {
                 if (i < currentPin.length) {
                     dots[i].classList.add('filled');
                 } else {
